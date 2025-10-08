@@ -8,12 +8,12 @@ sudo apt install llvm
 # Build LLVM Pass
 clang++ Pass_trace.cpp -fPIC -shared -I$(llvm-config --includedir) -o artifacts/libPass.so
 # Build LLVM IR for app.c without MyPass
-clang ../SDL/app.c -emit-llvm -S -o artifacts/app.ll
+clang -Os ../SDL/app.c -emit-llvm -S -o artifacts/app.ll
 # Build LLVM IR for app.c with MyPass
-clang -fpass-plugin=./artifacts/libPass.so ../SDL/app.c -emit-llvm -S -o artifacts/app.log.ll
+clang -Os -fpass-plugin=./artifacts/libPass.so ../SDL/app.c -emit-llvm -S -o artifacts/app.log.ll
 # Similar commands which return executable file with traces
-clang -fpass-plugin=./artifacts/libPass.so log.c ../SDL/sim.c ../SDL/app.c ../SDL/start.c -lSDL2
-clang log.c artifacts/app.log.ll ../SDL/sim.c ../SDL/start.c -lSDL2
+clang -Os -fpass-plugin=./artifacts/libPass.so log.c ../SDL/sim.c ../SDL/app.c ../SDL/start.c -lSDL2
+clang -Os log.c artifacts/app.log.ll ../SDL/sim.c ../SDL/start.c -lSDL2
 ```
 
 The first argument must be ```path_to_app.c```, because we run this pass only for our application.
